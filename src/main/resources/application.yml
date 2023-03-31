@@ -23,3 +23,8 @@ spring:
 #Image Folder
 project:
   image: images/
+
+# secrect key generated from online 256bit
+security:
+  jwt:
+    secret: "34753778214125442A472D4B6150645367566B58703273357638792F423F4528"
