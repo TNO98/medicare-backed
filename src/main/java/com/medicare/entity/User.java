@@ -1,9 +1,6 @@
 package com.medicare.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,18 +18,17 @@ import java.util.List;
 @AllArgsConstructor
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotBlank(message = "User's name should not be blank")
+    //@NotBlank(message = "User's name should not be blank")
     private String name;
     @Column(unique = true)
     private String email;
-    @NotBlank(message = "User's password should not be blank")
+    //@NotBlank(message = "User's password should not be blank")
     private String password;
-    @NotNull(message = "User Role Can not be null!!")
+    //@NotNull(message = "User Role Can not be null!!")
     @Enumerated(EnumType.STRING)
     private Role role;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

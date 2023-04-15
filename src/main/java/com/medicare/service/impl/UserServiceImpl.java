@@ -9,18 +9,23 @@ import com.medicare.service.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
-
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDto createUser(UserDto userDto) {
+        if (userRepository.existsByEmail(userDto.getEmail())){
+            User user = userRepository.findByEmail(userDto.getEmail()).get();
+            return modelMapper.map(user,UserDto.class);
+        }
         User user = modelMapper.map(userDto, User.class);
         User savedUser = userRepository.save(user);
         return modelMapper.map(savedUser, UserDto.class);
@@ -64,7 +69,7 @@ public class UserServiceImpl implements UserService {
     public void init(){
         User user =User.builder().name("Malay Sarkar")
                 .email("malay@gmail.com")
-                .password("abc123")
+                .password(passwordEncoder.encode("abc123"))
                 .role(Role.ADMIN)
                 .build();
         if(!userRepository.existsByEmail(user.getEmail())) this.userRepository.save(user);

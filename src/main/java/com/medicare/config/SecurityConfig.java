@@ -10,6 +10,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -17,14 +20,16 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final String[] allowedUrl= {"/api/auth/**","/api/medicine/","/api/medicine/image/**"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
            http
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                   .requestMatchers("/api/auth/**")
+                   .requestMatchers(allowedUrl)
                    .permitAll()
                    .anyRequest()
                    .authenticated()

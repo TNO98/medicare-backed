@@ -1,14 +1,13 @@
 package com.medicare.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 
 @Entity
 @Table(name = "medicines")
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,10 +19,9 @@ public class Medicine {
     private String brand;
     private double price;
     private String imageName;
-    private int unitsAvailable;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "category_id")
-    @JsonManagedReference
     private Category category;
+
 
 }

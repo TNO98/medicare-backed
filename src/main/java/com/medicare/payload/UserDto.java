@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.medicare.entity.Role;
 import lombok.*;
 
-import java.util.Map;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,8 +14,6 @@ public class UserDto {
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-
-
-    private Role role;
+    private Role role=Role.USER;
 
 }
