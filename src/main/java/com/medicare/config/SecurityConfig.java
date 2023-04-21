@@ -20,7 +20,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-    private final String[] allowedUrl= {"/api/auth/**","/api/medicine/","/api/medicine/image/**"};
+    private final String[] allowedUrl= {"/api/auth/**","/api/medicine/","/api/medicine/image/**", "/api/category/"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

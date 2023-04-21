@@ -10,7 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 public class UserDto {
     private long id;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;

@@ -1,6 +1,7 @@
 package com.medicare.entity;
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,13 +21,15 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    //@NotBlank(message = "User's name should not be blank")
-    private String name;
+    @NotBlank(message = "User's name should not be blank")
+    private String firstName;
+    @NotBlank(message = "User's name should not be blank")
+    private String lastName;
     @Column(unique = true)
     private String email;
-    //@NotBlank(message = "User's password should not be blank")
+    @NotBlank(message = "User's password should not be blank")
     private String password;
-    //@NotNull(message = "User Role Can not be null!!")
+    @NotNull(message = "User Role Can not be null!!")
     @Enumerated(EnumType.STRING)
     private Role role;
     @Override

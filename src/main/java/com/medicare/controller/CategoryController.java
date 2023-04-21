@@ -1,19 +1,21 @@
 package com.medicare.controller;
 
+import com.medicare.entity.Role;
 import com.medicare.payload.ApiResponse;
 import com.medicare.payload.CategoryDto;
 import com.medicare.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins ={"*"})
 @RestController
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
-@CrossOrigin(origins ={"*"})
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -22,11 +24,12 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.findById(id));
     }
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<CategoryDto>> findAll(){
         return ResponseEntity.ok(categoryService.findAll());
     }
-    @PostMapping
+    @PostMapping("/")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(categoryDto));
     }

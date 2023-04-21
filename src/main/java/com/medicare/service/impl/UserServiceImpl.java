@@ -51,10 +51,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(Long id, UserDto newUserDto) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
-        user.setName(newUserDto.getName());
-        user.setPassword(newUserDto.getPassword());
-        user.setEmail(newUserDto.getEmail());
-        User updatedUser = userRepository.save(user);
+//        user.setName(newUserDto.getName());
+//        user.setPassword(newUserDto.getPassword());
+//        user.setEmail(newUserDto.getEmail());
+//        User updatedUser = userRepository.save(user);
+        newUserDto.setId(user.getId());
+        User updatedUser = userRepository.save(modelMapper.map(newUserDto,User.class));
         return modelMapper.map(updatedUser,UserDto.class);
     }
 
@@ -67,7 +69,9 @@ public class UserServiceImpl implements UserService {
 
     @PostConstruct
     public void init(){
-        User user =User.builder().name("Malay Sarkar")
+        User user =User.builder()
+                .firstName("Malay")
+                .lastName("Sarkar")
                 .email("malay@gmail.com")
                 .password(passwordEncoder.encode("abc123"))
                 .role(Role.ADMIN)

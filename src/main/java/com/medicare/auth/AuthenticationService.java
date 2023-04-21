@@ -22,8 +22,11 @@ public class AuthenticationService {
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
     public AuthenticationResponse register(RegisterRequest registerRequest) {
+
+
         var user = UserDto.builder()
-                .name(registerRequest.getName())
+                .firstName(registerRequest.getFirstName())
+                .lastName(registerRequest.getLastName())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(Role.USER)

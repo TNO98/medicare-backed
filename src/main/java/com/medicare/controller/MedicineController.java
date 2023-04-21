@@ -1,4 +1,5 @@
 package com.medicare.controller;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medicare.payload.ApiResponse;
 import com.medicare.payload.MedicineDto;
 import com.medicare.service.FileService;
@@ -6,6 +7,7 @@ import com.medicare.service.MedicineService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.DataInput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -20,8 +23,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/medicine")
 @RequiredArgsConstructor
-@CrossOrigin(origins ={"*"})
+@CrossOrigin(origins ={"*","http://localhost:4200/"})
 public class MedicineController {
+
+    private final ObjectMapper mapper;
     private final FileService fileService;
     private final MedicineService medicineService;
     @Value("${project.image}")
@@ -31,11 +36,13 @@ public class MedicineController {
     public ResponseEntity<List<MedicineDto>> getAllMedicine(){
         return new ResponseEntity<>(medicineService.getAllMedicine(), HttpStatus.OK);
     }
-    @PostMapping(value = "/",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<MedicineDto> saveMedicine(@RequestPart MedicineDto medicineDto, @RequestPart MultipartFile image) throws IOException {
+    @PostMapping(value = "/",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.ALL_VALUE})
+    public ResponseEntity<MedicineDto> saveMedicine(@RequestParam("medicineDto") String medicineDto, @RequestPart MultipartFile image) throws IOException {
+        MedicineDto medicineDto1 = mapper.readValue(medicineDto, MedicineDto.class);
+
         String imageName=fileService.uploadImage(path,image);
-        medicineDto.setImageName(imageName);
-        return new ResponseEntity<>(medicineService.saveMedicine(medicineDto),HttpStatus.CREATED);
+        medicineDto1.setImageName(imageName);
+        return new ResponseEntity<>(medicineService.saveMedicine(medicineDto1),HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -43,14 +50,19 @@ public class MedicineController {
         return ResponseEntity.ok(medicineService.getMedicineById(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<MedicineDto> updateMedicine(@PathVariable Long id, @RequestBody MedicineDto updatedMedicine){
+    @PutMapping(value = "/{id}" ,consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<MedicineDto> updateMedicine(@PathVariable Long id, @RequestBody MedicineDto updatedMedicine,@RequestPart MultipartFile image) throws IOException {
+        String imageName=fileService.uploadImage(path,image);
+        updatedMedicine.setImageName(imageName);
         return ResponseEntity.ok(medicineService.updateMedicine(id,updatedMedicine));
     }
 
+    @CrossOrigin(origins = {"*"},allowedHeaders = {"*"})
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteMedicine(@PathVariable Long id){
         this.medicineService.deleteMedicine(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Origin", "http://localhost:4200");
         return ResponseEntity.ok(new ApiResponse("Medicine deleted Successfully",true));
     }
 
