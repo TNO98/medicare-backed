@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/medicine")
 @RequiredArgsConstructor
-@CrossOrigin(origins ={"*","http://localhost:4200/"})
+@CrossOrigin(origins ={"*"})
 public class MedicineController {
 
     private final ObjectMapper mapper;
@@ -57,12 +57,9 @@ public class MedicineController {
         return ResponseEntity.ok(medicineService.updateMedicine(id,updatedMedicine));
     }
 
-    @CrossOrigin(origins = {"*"},allowedHeaders = {"*"})
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteMedicine(@PathVariable Long id){
         this.medicineService.deleteMedicine(id);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Origin", "http://localhost:4200");
         return ResponseEntity.ok(new ApiResponse("Medicine deleted Successfully",true));
     }
 
@@ -72,7 +69,6 @@ public class MedicineController {
             @PathVariable("imageName") String imageName,
             HttpServletResponse response
     ) throws IOException {
-
         InputStream resource = this.fileService.getResource(path, imageName);
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource,response.getOutputStream());
