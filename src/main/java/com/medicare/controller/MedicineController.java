@@ -7,7 +7,6 @@ import com.medicare.service.MedicineService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -51,10 +49,11 @@ public class MedicineController {
     }
 
     @PutMapping(value = "/{id}" ,consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<MedicineDto> updateMedicine(@PathVariable Long id, @RequestBody MedicineDto updatedMedicine,@RequestPart MultipartFile image) throws IOException {
+    public ResponseEntity<MedicineDto> updateMedicine(@PathVariable Long id, @RequestParam("updatedMedicine") String updatedMedicine,@RequestPart MultipartFile image) throws IOException {
+        MedicineDto newMedicine = this.mapper.readValue(updatedMedicine, MedicineDto.class);
         String imageName=fileService.uploadImage(path,image);
-        updatedMedicine.setImageName(imageName);
-        return ResponseEntity.ok(medicineService.updateMedicine(id,updatedMedicine));
+        newMedicine.setImageName(imageName);
+        return ResponseEntity.ok(medicineService.updateMedicine(id,newMedicine));
     }
 
     @DeleteMapping("/{id}")

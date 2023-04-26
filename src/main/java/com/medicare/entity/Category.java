@@ -28,7 +28,7 @@ public class Category {
     private String name;
     @NotBlank
     private String description;
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     @JsonIgnore
     List<Medicine> medicine;
 }

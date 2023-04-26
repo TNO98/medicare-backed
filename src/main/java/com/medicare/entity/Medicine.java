@@ -19,7 +19,7 @@ public class Medicine {
     private String brand;
     private double price;
     private String imageName;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
