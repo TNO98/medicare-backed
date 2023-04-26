@@ -82,7 +82,7 @@ public class OrderController {
                 .collect(Collectors.toList());
 
         if (!CollectionUtils.isEmpty(list)) {
-            new ResourceNotFoundException("Medicine","id",list.get(1).getMedicineDto().getId());
+            throw new ResourceNotFoundException("Medicine", "id", list.get(1).getMedicineDto().getId());
         }
     }
 
