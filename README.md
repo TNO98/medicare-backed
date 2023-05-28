@@ -4,6 +4,7 @@
 
 Welcome to the Medicare Backend! This repository contains the backend code for the Medicare Angular Medicine Ecommerce App. The backend is built using Spring Boot and utilizes MySQL as the database.
 - To access the live version of the app, visit: [Medicare Live Demo](http://15.207.29.70/)
+- To access the admin panel use the following credentials : email : malay@gmail.com password : abc123
 ## Features
 
 The Medicare backend provides the following features:
